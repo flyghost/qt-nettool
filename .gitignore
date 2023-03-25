@@ -1,0 +1,4 @@
+build*/
+bin/*
+*.pro.user
+.vs/*

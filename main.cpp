@@ -25,7 +25,7 @@ int main(int argc, char *argv[])
     AppData::readDeviceData();
 
     frmMain w;
-    w.setWindowTitle("网络调试助手 V2022 (QQ: 517216493 WX: feiyangqingyun)");
+    w.setWindowTitle("网络调试助手 V2022 (copyright by creekwater)");
     w.resize(950, 700);
     QUIHelper::setFormInCenter(&w);
     w.show();
