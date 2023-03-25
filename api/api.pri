@@ -5,6 +5,7 @@ HEADERS += $$PWD/appconfig.h \
     $$PWD/tcpserverclient.h
 HEADERS += $$PWD/tcpserverclient.h
 HEADERS += $$PWD/tcpserver.h
+HEADERS += $$PWD/tcpclient.h
 
 SOURCES += $$PWD/appconfig.cpp \
     $$PWD/appdata.cpp \
@@ -13,6 +14,7 @@ SOURCES += $$PWD/appconfig.cpp \
     $$PWD/tcpserverclient.cpp
 SOURCES += $$PWD/tcpserverclient.cpp
 SOURCES += $$PWD/tcpserver.cpp
+SOURCES += $$PWD/tcpclient.cpp
 
 contains(DEFINES, websocket) {
 HEADERS += $$PWD/webclient.h
