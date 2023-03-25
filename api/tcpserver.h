@@ -1,7 +1,7 @@
 ﻿#ifndef TCPSERVER_H
 #define TCPSERVER_H
 
-#include "tcpclient.h"
+#include "tcpserverclient.h"
 
 class TcpServer : public QTcpServer
 {
@@ -10,7 +10,7 @@ public:
     explicit TcpServer(QObject *parent = 0);
 
 private:
-    QList<TcpClient *> clients;
+    QList<TcpServerClient *> clients;
 
 private slots:
     void slot_newConnection();

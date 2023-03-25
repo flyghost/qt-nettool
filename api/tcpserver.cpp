@@ -9,7 +9,7 @@ TcpServer::TcpServer(QObject *parent) : QTcpServer(parent)
 void TcpServer::slot_newConnection()
 {
     QTcpSocket *socket = this->nextPendingConnection();
-    TcpClient *client = new TcpClient(socket, this);
+    TcpServerClient *client = new TcpServerClient(socket, this);
     connect(client, SIGNAL(disconnected(QString, int)), this, SLOT(slot_disconnected(QString, int)));
     connect(client, SIGNAL(error(QString, int, QString)), this, SIGNAL(error(QString, int, QString)));
     connect(client, SIGNAL(sendData(QString, int, QString)), this, SIGNAL(sendData(QString, int, QString)));
@@ -22,7 +22,7 @@ void TcpServer::slot_newConnection()
 
 void TcpServer::slot_disconnected(const QString &ip, int port)
 {
-    TcpClient *client = (TcpClient *)sender();
+    TcpServerClient *client = (TcpServerClient *)sender();
     emit disconnected(ip, port);
     //断开连接后从链表中移除
     clients.removeOne(client);
@@ -42,7 +42,7 @@ void TcpServer::stop()
 
 void TcpServer::writeData(const QString &ip, int port, const QString &data)
 {
-    foreach (TcpClient *client, clients) {
+    foreach (TcpServerClient *client, clients) {
         if (client->getIP() == ip && client->getPort() == port) {
             client->sendData(data);
             break;
@@ -52,14 +52,14 @@ void TcpServer::writeData(const QString &ip, int port, const QString &data)
 
 void TcpServer::writeData(const QString &data)
 {
-    foreach (TcpClient *client, clients) {
+    foreach (TcpServerClient *client, clients) {
         client->sendData(data);
     }
 }
 
 void TcpServer::remove(const QString &ip, int port)
 {
-    foreach (TcpClient *client, clients) {
+    foreach (TcpServerClient *client, clients) {
         if (client->getIP() == ip && client->getPort() == port) {
             client->abort();
             break;
@@ -69,7 +69,7 @@ void TcpServer::remove(const QString &ip, int port)
 
 void TcpServer::remove()
 {
-    foreach (TcpClient *client, clients) {
+    foreach (TcpServerClient *client, clients) {
         client->abort();
     }
 }

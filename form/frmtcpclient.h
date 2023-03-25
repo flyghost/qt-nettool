@@ -22,7 +22,7 @@ protected:
 private:
     Ui::frmTcpClient *ui;
 
-    bool isOk;
+    bool isOk;              // 是否已经连接
     QTcpSocket *socket;
     QTimer *timer;
 
