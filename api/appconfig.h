@@ -9,18 +9,6 @@ public:
     static QString ConfigFile;          //配置文件路径
     static int CurrentIndex;            //当前索引
 
-    //TCP客户端配置参数
-    static bool HexSendTcpClient;       //16进制发送
-    static bool HexReceiveTcpClient;    //16进制接收
-    static bool AsciiTcpClient;         //ASCII模式
-    static bool DebugTcpClient;         //启用数据调试
-    static bool AutoSendTcpClient;      //自动发送数据
-    static int IntervalTcpClient;       //发送数据间隔
-    static QString TcpBindIP;           //绑定地址
-    static int TcpBindPort;             //绑定端口
-    static QString TcpServerIP;         //服务器地址
-    static int TcpServerPort;           //服务器端口
-
     //TCP服务器配置参数
     static bool HexSendTcpServer;       //16进制发送
     static bool HexReceiveTcpServer;    //16进制接收

@@ -55,63 +55,64 @@ void frmTcpClient::initForm()
 
 void frmTcpClient::initConfig()
 {
-    ui->ckHexSend->setChecked(AppConfig::HexSendTcpClient);
+    ui->ckHexSend->setChecked(client->readConfigHexSendTcpClient());
     connect(ui->ckHexSend, SIGNAL(stateChanged(int)), this, SLOT(saveConfig()));
 
-    ui->ckHexReceive->setChecked(AppConfig::HexReceiveTcpClient);
+    ui->ckHexReceive->setChecked(client->readConfigHexReceiveTcpClient());
     connect(ui->ckHexReceive, SIGNAL(stateChanged(int)), this, SLOT(saveConfig()));
 
-    ui->ckAscii->setChecked(AppConfig::AsciiTcpClient);
+    ui->ckAscii->setChecked(client->readConfigAsciiTcpClient());
     connect(ui->ckAscii, SIGNAL(stateChanged(int)), this, SLOT(saveConfig()));
 
-    ui->ckDebug->setChecked(AppConfig::DebugTcpClient);
+    ui->ckDebug->setChecked(client->readConfigDebugTcpClient());
     connect(ui->ckDebug, SIGNAL(stateChanged(int)), this, SLOT(saveConfig()));
 
-    ui->ckAutoSend->setChecked(AppConfig::AutoSendTcpClient);
+    ui->ckAutoSend->setChecked(client->readConfigAutoSendTcpClient());
     connect(ui->ckAutoSend, SIGNAL(stateChanged(int)), this, SLOT(saveConfig()));
 
-    ui->cboxInterval->setCurrentIndex(ui->cboxInterval->findText(QString::number(AppConfig::IntervalTcpClient)));
+    ui->cboxInterval->setCurrentIndex(ui->cboxInterval->findText(QString::number(client->readConfigIntervalTcpClient())));
     connect(ui->cboxInterval, SIGNAL(currentIndexChanged(int)), this, SLOT(saveConfig()));
 
-    ui->cboxBindIP->setCurrentIndex(ui->cboxBindIP->findText(AppConfig::TcpBindIP));
+    ui->cboxBindIP->setCurrentIndex(ui->cboxBindIP->findText(client->readConfigTcpBindIP()));
     connect(ui->cboxBindIP, SIGNAL(currentIndexChanged(int)), this, SLOT(saveConfig()));
 
-    ui->txtBindPort->setText(QString::number(AppConfig::TcpBindPort));
+    ui->txtBindPort->setText(QString::number(client->readConfigTcpBindPort()));
     connect(ui->txtBindPort, SIGNAL(textChanged(QString)), this, SLOT(saveConfig()));
 
-    ui->txtServerIP->setText(AppConfig::TcpServerIP);
+    ui->txtServerIP->setText(client->readConfigTcpServerIP());
     connect(ui->txtServerIP, SIGNAL(textChanged(QString)), this, SLOT(saveConfig()));
 
-    ui->txtServerPort->setText(QString::number(AppConfig::TcpServerPort));
+    ui->txtServerPort->setText(QString::number(client->readConfigTcpServerPort()));
     connect(ui->txtServerPort, SIGNAL(textChanged(QString)), this, SLOT(saveConfig()));
 
     this->initTimer();
 }
 
 void frmTcpClient::saveConfig()
-{
-    AppConfig::HexSendTcpClient = ui->ckHexSend->isChecked();
-    AppConfig::HexReceiveTcpClient = ui->ckHexReceive->isChecked();
-    AppConfig::AsciiTcpClient = ui->ckAscii->isChecked();
-    AppConfig::DebugTcpClient = ui->ckDebug->isChecked();
-    AppConfig::AutoSendTcpClient = ui->ckAutoSend->isChecked();
-    AppConfig::IntervalTcpClient = ui->cboxInterval->currentText().toInt();
-    AppConfig::TcpBindIP = ui->cboxBindIP->currentText();
-    AppConfig::TcpBindPort = ui->txtBindPort->text().trimmed().toInt();
-    AppConfig::TcpServerIP = ui->txtServerIP->text().trimmed();
-    AppConfig::TcpServerPort = ui->txtServerPort->text().trimmed().toInt();
-    AppConfig::writeConfig();
+{    
+    client->writeConfigHexSendTcpClient(ui->ckHexSend->isChecked());
+    client->writeConfigHexReceiveTcpClient(ui->ckHexReceive->isChecked());
+    client->writeConfigAsciiTcpClient(ui->ckAscii->isChecked());
+    client->writeConfigDebugTcpClient(ui->ckDebug->isChecked());
+    client->writeConfigAutoSendTcpClient(ui->ckAutoSend->isChecked());
+    client->writeConfigIntervalTcpClient(ui->cboxInterval->currentText().toInt());
+    client->writeConfigTcpBindIP(ui->cboxBindIP->currentText());
+    client->writeConfigTcpBindPort(ui->txtBindPort->text().trimmed().toInt());
+    client->writeConfigTcpServerIP(ui->txtServerIP->text().trimmed());
+    client->writeConfigTcpServerPort(ui->txtServerPort->text().trimmed().toInt());
+
+    client->writeConfig();
 
     this->initTimer();
 }
 
 void frmTcpClient::initTimer()
 {
-    if (timer->interval() != AppConfig::IntervalTcpClient) {
-        timer->setInterval(AppConfig::IntervalTcpClient);
+    if (timer->interval() != client->readConfigIntervalTcpClient()) {
+        timer->setInterval(client->readConfigIntervalTcpClient());
     }
 
-    if (AppConfig::AutoSendTcpClient) {
+    if (client->readConfigAutoSendTcpClient()) {
         if (!timer->isActive()) {
             timer->start();
         }
@@ -189,24 +190,14 @@ void frmTcpClient::error(QString errorString)
 void frmTcpClient::readData()
 {
     QString buffer;
-    qsizetype size;
-
-    if (AppConfig::HexReceiveTcpClient) {
-        size = client->readHexString(&buffer);
-    } else if (AppConfig::AsciiTcpClient) {
-        size = client->readAsciiString(&buffer);
-    } else {
-        size = client->readByteString(&buffer);
-    }
-
-    if(size <= 0){
+    if(client->readData(&buffer) <= 0){
         return;
     }
 
     append(1, buffer);
 
     //自动回复数据,可以回复的数据是以;隔开,每行可以带多个;所以这里不需要继续判断
-    if (AppConfig::DebugTcpClient) {
+    if (client->readConfigDebugTcpClient()) {
         int count = AppData::Keys.count();
         for (int i = 0; i < count; i++) {
             if (AppData::Keys.at(i) == buffer) {
@@ -219,13 +210,7 @@ void frmTcpClient::readData()
 
 void frmTcpClient::sendData(const QString &data)
 {
-    if (AppConfig::HexSendTcpClient) {
-        client->writeHexString(data);
-    } else if (AppConfig::AsciiTcpClient) {
-        client->writeAsciiString(data);
-    } else {
-        client->writeByteString(data);
-    }
+    client->sendData(data);
 
     append(0, data);
 }
@@ -233,7 +218,7 @@ void frmTcpClient::sendData(const QString &data)
 void frmTcpClient::on_btnConnect_clicked()
 {
     if (ui->btnConnect->text() == "连接") {
-        client->connectToHost(AppConfig::TcpServerIP, AppConfig::TcpServerPort);
+        client->connectToHost(client->readConfigTcpServerIP(), client->readConfigTcpServerPort());
     } else {
         client->abort();
     }

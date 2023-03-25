@@ -15,7 +15,7 @@ RC_FILE     = qrc/main.rc
 wasm {
 RESOURCES   += qrc/font.qrc
 } else {
-DESTDIR     = $$PWD/../bin
+DESTDIR     = $$PWD/build/bin
 }
 
 HEADERS     += head.h

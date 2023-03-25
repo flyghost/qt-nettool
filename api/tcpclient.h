@@ -18,10 +18,11 @@ public:
     void connectToHost(QString TcpServerIP, int TcpServerPort);
     void abort();
     QString errorString() const;
-    QByteArray readAll();
+    qint64 sendData(const QString &data);
     qint64 writeHexString(const QString &data);
     qint64 writeAsciiString(const QString &data);
     qint64 writeByteString(const QString &data);
+    qsizetype readData(QString *string);
     qsizetype readHexString(QString *string);
     qsizetype readAsciiString(QString *string);
     qsizetype readByteString(QString *string);
@@ -32,6 +33,46 @@ public:
 
 private:
     QTcpSocket *socket;
+
+    //TCP客户端配置参数
+    bool HexSendTcpClient;       //16进制发送
+    bool HexReceiveTcpClient;    //16进制接收
+    bool AsciiTcpClient;         //ASCII模式
+    bool DebugTcpClient;         //启用数据调试
+    bool AutoSendTcpClient;      //自动发送数据
+    int IntervalTcpClient;       //发送数据间隔
+    QString TcpBindIP;           //绑定地址
+    int TcpBindPort;             //绑定端口
+    QString TcpServerIP;         //服务器地址
+    int TcpServerPort;           //服务器端口
+
+public:
+    void initConfig();
+    void writeConfig();
+    void readConfig();
+
+    bool readConfigHexSendTcpClient();
+    bool readConfigHexReceiveTcpClient();
+    bool readConfigAsciiTcpClient();
+    bool readConfigDebugTcpClient();
+    bool readConfigAutoSendTcpClient();
+    int readConfigIntervalTcpClient();
+    QString readConfigTcpBindIP();
+    int readConfigTcpBindPort();
+    QString readConfigTcpServerIP();
+    int readConfigTcpServerPort();
+
+    void writeConfigHexSendTcpClient(bool HexSendTcpClient);
+    void writeConfigHexReceiveTcpClient(bool HexReceiveTcpClient);
+    void writeConfigAsciiTcpClient(bool AsciiTcpClient);
+    void writeConfigDebugTcpClient(bool DebugTcpClient);
+    void writeConfigAutoSendTcpClient(bool AutoSendTcpClient);
+    void writeConfigIntervalTcpClient(int IntervalTcpClient);
+    void writeConfigTcpBindIP(QString TcpBindIP);
+    void writeConfigTcpBindPort(int TcpBindPort);
+    void writeConfigTcpServerIP(QString TcpServerIP);
+    void writeConfigTcpServerPort(int TcpServerPort);
+
 
 signals:
     void connected();

@@ -4,17 +4,6 @@
 QString AppConfig::ConfigFile = "config.ini";
 int AppConfig::CurrentIndex = 0;
 
-bool AppConfig::HexSendTcpClient = false;
-bool AppConfig::HexReceiveTcpClient = false;
-bool AppConfig::AsciiTcpClient = false;
-bool AppConfig::DebugTcpClient = false;
-bool AppConfig::AutoSendTcpClient = false;
-int AppConfig::IntervalTcpClient = 1000;
-QString AppConfig::TcpBindIP = "127.0.0.1";
-int AppConfig::TcpBindPort = 6001;
-QString AppConfig::TcpServerIP = "127.0.0.1";
-int AppConfig::TcpServerPort = 6000;
-
 bool AppConfig::HexSendTcpServer = false;
 bool AppConfig::HexReceiveTcpServer = false;
 bool AppConfig::AsciiTcpServer = false;
@@ -73,18 +62,18 @@ void AppConfig::readConfig()
     AppConfig::CurrentIndex = set.value("CurrentIndex").toInt();
     set.endGroup();
 
-    set.beginGroup("TcpClientConfig");
-    AppConfig::HexSendTcpClient = set.value("HexSendTcpClient", AppConfig::HexSendTcpClient).toBool();
-    AppConfig::HexReceiveTcpClient = set.value("HexReceiveTcpClient", AppConfig::HexReceiveTcpClient).toBool();
-    AppConfig::AsciiTcpClient = set.value("AsciiTcpClient", AppConfig::AsciiTcpClient).toBool();
-    AppConfig::DebugTcpClient = set.value("DebugTcpClient", AppConfig::DebugTcpClient).toBool();
-    AppConfig::AutoSendTcpClient = set.value("AutoSendTcpClient", AppConfig::AutoSendTcpClient).toBool();
-    AppConfig::IntervalTcpClient = set.value("IntervalTcpClient", AppConfig::IntervalTcpClient).toInt();
-    AppConfig::TcpBindIP = set.value("TcpBindIP", AppConfig::TcpBindIP).toString();
-    AppConfig::TcpBindPort = set.value("TcpBindPort", AppConfig::TcpBindPort).toInt();
-    AppConfig::TcpServerIP = set.value("TcpServerIP", AppConfig::TcpServerIP).toString();
-    AppConfig::TcpServerPort = set.value("TcpServerPort", AppConfig::TcpServerPort).toInt();
-    set.endGroup();
+//    set.beginGroup("TcpClientConfig");
+//    AppConfig::HexSendTcpClient = set.value("HexSendTcpClient", AppConfig::HexSendTcpClient).toBool();
+//    AppConfig::HexReceiveTcpClient = set.value("HexReceiveTcpClient", AppConfig::HexReceiveTcpClient).toBool();
+//    AppConfig::AsciiTcpClient = set.value("AsciiTcpClient", AppConfig::AsciiTcpClient).toBool();
+//    AppConfig::DebugTcpClient = set.value("DebugTcpClient", AppConfig::DebugTcpClient).toBool();
+//    AppConfig::AutoSendTcpClient = set.value("AutoSendTcpClient", AppConfig::AutoSendTcpClient).toBool();
+//    AppConfig::IntervalTcpClient = set.value("IntervalTcpClient", AppConfig::IntervalTcpClient).toInt();
+//    AppConfig::TcpBindIP = set.value("TcpBindIP", AppConfig::TcpBindIP).toString();
+//    AppConfig::TcpBindPort = set.value("TcpBindPort", AppConfig::TcpBindPort).toInt();
+//    AppConfig::TcpServerIP = set.value("TcpServerIP", AppConfig::TcpServerIP).toString();
+//    AppConfig::TcpServerPort = set.value("TcpServerPort", AppConfig::TcpServerPort).toInt();
+//    set.endGroup();
 
     set.beginGroup("TcpServerConfig");
     AppConfig::HexSendTcpServer = set.value("HexSendTcpServer", AppConfig::HexSendTcpServer).toBool();
@@ -161,17 +150,17 @@ void AppConfig::writeConfig()
     set.setValue("CurrentIndex", AppConfig::CurrentIndex);
     set.endGroup();
 
-    set.beginGroup("TcpClientConfig");
-    set.setValue("HexSendTcpClient", AppConfig::HexSendTcpClient);
-    set.setValue("HexReceiveTcpClient", AppConfig::HexReceiveTcpClient);
-    set.setValue("DebugTcpClient", AppConfig::DebugTcpClient);
-    set.setValue("AutoSendTcpClient", AppConfig::AutoSendTcpClient);
-    set.setValue("IntervalTcpClient", AppConfig::IntervalTcpClient);
-    set.setValue("TcpBindIP", AppConfig::TcpBindIP);
-    set.setValue("TcpBindPort", AppConfig::TcpBindPort);
-    set.setValue("TcpServerIP", AppConfig::TcpServerIP);
-    set.setValue("TcpServerPort", AppConfig::TcpServerPort);
-    set.endGroup();
+//    set.beginGroup("TcpClientConfig");
+//    set.setValue("HexSendTcpClient", AppConfig::HexSendTcpClient);
+//    set.setValue("HexReceiveTcpClient", AppConfig::HexReceiveTcpClient);
+//    set.setValue("DebugTcpClient", AppConfig::DebugTcpClient);
+//    set.setValue("AutoSendTcpClient", AppConfig::AutoSendTcpClient);
+//    set.setValue("IntervalTcpClient", AppConfig::IntervalTcpClient);
+//    set.setValue("TcpBindIP", AppConfig::TcpBindIP);
+//    set.setValue("TcpBindPort", AppConfig::TcpBindPort);
+//    set.setValue("TcpServerIP", AppConfig::TcpServerIP);
+//    set.setValue("TcpServerPort", AppConfig::TcpServerPort);
+//    set.endGroup();
 
     set.beginGroup("TcpServerConfig");
     set.setValue("HexSendTcpServer", AppConfig::HexSendTcpServer);
