@@ -2,7 +2,7 @@
 #include "quihelper.h"
 #include "quihelperdata.h"
 
-TcpClient::TcpClient(QTcpSocket *socket, QObject *parent) : QObject(parent)
+TcpClient::TcpClient(QObject *parent) : QObject(parent)
 {
     this->socket = new QTcpSocket(this);
     connect(socket, SIGNAL(connected()), this, SLOT(slot_connected()));

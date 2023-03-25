@@ -14,7 +14,7 @@ class TcpClient : public QThread
 {
     Q_OBJECT
 public:
-    explicit TcpClient(QTcpSocket *socket, QObject *parent = 0);
+    explicit TcpClient(QObject *parent = 0);
     void connectToHost(QString TcpServerIP, int TcpServerPort);
     void abort();
     QString errorString() const;
