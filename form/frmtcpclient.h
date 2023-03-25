@@ -3,6 +3,7 @@
 
 #include <QWidget>
 #include <QtNetwork>
+#include "tcpclient.h"
 
 namespace Ui {
 class frmTcpClient;
@@ -23,7 +24,7 @@ private:
     Ui::frmTcpClient *ui;
 
     bool isOk;              // 是否已经连接
-    QTcpSocket *socket;
+    TcpClient *client;
     QTimer *timer;
 
 private slots:
@@ -36,7 +37,7 @@ private slots:
 private slots:
     void connected();
     void disconnected();
-    void error();
+    void error(QString errorString);
     void readData();
     void sendData(const QString &data);
 

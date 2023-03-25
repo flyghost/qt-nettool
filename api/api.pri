@@ -3,7 +3,7 @@ HEADERS += $$PWD/appconfig.h \
     $$PWD/quihelper.h \
     $$PWD/quihelperdata.h \
     $$PWD/tcpserverclient.h
-HEADERS += $$PWD/tcpserverclient.h
+
 HEADERS += $$PWD/tcpserver.h
 HEADERS += $$PWD/tcpclient.h
 
@@ -12,7 +12,7 @@ SOURCES += $$PWD/appconfig.cpp \
     $$PWD/quihelper.cpp \
     $$PWD/quihelperdata.cpp \
     $$PWD/tcpserverclient.cpp
-SOURCES += $$PWD/tcpserverclient.cpp
+
 SOURCES += $$PWD/tcpserver.cpp
 SOURCES += $$PWD/tcpclient.cpp
 

@@ -37,15 +37,11 @@ void frmTcpClient::initForm()
     isOk = false;
 
     //实例化对象并绑定信号槽
-    socket = new QTcpSocket(this);
-    connect(socket, SIGNAL(connected()), this, SLOT(connected()));
-    connect(socket, SIGNAL(disconnected()), this, SLOT(disconnected()));
-    connect(socket, SIGNAL(readyRead()), this, SLOT(readData()));
-#if (QT_VERSION >= QT_VERSION_CHECK(6,0,0))
-    connect(socket, SIGNAL(errorOccurred(QAbstractSocket::SocketError)), this, SLOT(error()));
-#else
-    connect(socket, SIGNAL(error(QAbstractSocket::SocketError)), this, SLOT(error()));
-#endif
+    client = new TcpClient(this);
+    connect(client, SIGNAL(connected()), this, SLOT(connected()));
+    connect(client, SIGNAL(disconnected()), this, SLOT(disconnected()));
+    connect(client, SIGNAL(readyRead()), this, SLOT(readData()));
+    connect(client, SIGNAL(errorOccurred(QString)), this, SLOT(error(QString)));
 
     //定时器发送数据
     timer = new QTimer(this);
@@ -174,8 +170,8 @@ void frmTcpClient::connected()
     isOk = true;
     ui->btnConnect->setText("断开");
     append(0, "服务器连接");
-    append(0, QString("本地地址: %1  本地端口: %2").arg(socket->localAddress().toString()).arg(socket->localPort()));
-    append(0, QString("远程地址: %1  远程端口: %2").arg(socket->peerAddress().toString()).arg(socket->peerPort()));
+    append(0, QString("本地地址: %1  本地端口: %2").arg(client->localAddressString()).arg(client->localPortInt()));
+    append(0, QString("远程地址: %1  远程端口: %2").arg(client->remoteAddressString()).arg(client->remotePortInt()));
 }
 
 void frmTcpClient::disconnected()
@@ -185,25 +181,26 @@ void frmTcpClient::disconnected()
     append(1, "服务器断开");
 }
 
-void frmTcpClient::error()
+void frmTcpClient::error(QString errorString)
 {
-    append(2, socket->errorString());
+    append(2, errorString);
 }
 
 void frmTcpClient::readData()
 {
-    QByteArray data = socket->readAll();
-    if (data.length() <= 0) {
-        return;
+    QString buffer;
+    qsizetype size;
+
+    if (AppConfig::HexReceiveTcpClient) {
+        size = client->readHexString(&buffer);
+    } else if (AppConfig::AsciiTcpClient) {
+        size = client->readAsciiString(&buffer);
+    } else {
+        size = client->readByteString(&buffer);
     }
 
-    QString buffer;
-    if (AppConfig::HexReceiveTcpClient) {
-        buffer = QUIHelperData::byteArrayToHexStr(data);
-    } else if (AppConfig::AsciiTcpClient) {
-        buffer = QUIHelperData::byteArrayToAsciiStr(data);
-    } else {
-        buffer = QString(data);
+    if(size <= 0){
+        return;
     }
 
     append(1, buffer);
@@ -222,36 +219,23 @@ void frmTcpClient::readData()
 
 void frmTcpClient::sendData(const QString &data)
 {
-    QByteArray buffer;
     if (AppConfig::HexSendTcpClient) {
-        buffer = QUIHelperData::hexStrToByteArray(data);
+        client->writeHexString(data);
     } else if (AppConfig::AsciiTcpClient) {
-        buffer = QUIHelperData::asciiStrToByteArray(data);
+        client->writeAsciiString(data);
     } else {
-        buffer = data.toUtf8();
+        client->writeByteString(data);
     }
 
-    socket->write(buffer);
     append(0, data);
 }
 
 void frmTcpClient::on_btnConnect_clicked()
 {
     if (ui->btnConnect->text() == "连接") {
-        //断开所有连接和操作
-        //socket->abort();
-        //绑定网卡和端口
-        //有个后遗症,客户端这边断开连接后还会保持几分钟导致不能重复绑定
-        //如果是服务器断开则可以继续使用
-        //提示 The bound address is already in use
-        //参考 https://www.cnblogs.com/baiduboy/p/7426822.html
-#if (QT_VERSION >= QT_VERSION_CHECK(5,0,0))
-        //socket->bind(QHostAddress(AppConfig::TcpBindIP), AppConfig::TcpBindPort);
-#endif
-        //连接服务器
-        socket->connectToHost(AppConfig::TcpServerIP, AppConfig::TcpServerPort);
+        client->connectToHost(AppConfig::TcpServerIP, AppConfig::TcpServerPort);
     } else {
-        socket->abort();
+        client->abort();
     }
 }
 
