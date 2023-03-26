@@ -6,10 +6,13 @@
 
 TcpClient::TcpClient(QObject *parent) : QObject(parent)
 {
+    this->isOk = false;
     this->initConfig();
     this->readConfig();
 
     this->socket = new QTcpSocket(this);
+    this->timer = new QTimer(this);
+    connect(timer, SIGNAL(timeout()), this, SLOT(slot_timer()));
     connect(socket, SIGNAL(connected()), this, SLOT(slot_connected()));
     connect(socket, SIGNAL(disconnected()), this, SLOT(slot_disconnected()));
     connect(socket, SIGNAL(readyRead()), this, SLOT(slot_readyRead()));
@@ -147,11 +150,13 @@ quint16 TcpClient::remotePortInt()
 
 void TcpClient::slot_connected()
 {
+    this->isOk = true;
     emit connected();
 }
 
 void TcpClient::slot_disconnected()
 {
+    this->isOk = false;
     emit disconnected();
 }
 
@@ -163,6 +168,44 @@ void TcpClient::slot_readyRead()
 void TcpClient::slot_errorOccurred()
 {
     emit errorOccurred(this->socket->errorString());
+}
+
+void TcpClient::setAutoSendString(QString &str)
+{
+    if (!isOk && str.length() <= 0) {
+        return;
+    }
+
+    this->autoSendString = str;
+}
+
+void TcpClient::startAutoSendTimer()
+{
+    if(this->timer->interval() != this->IntervalTcpClient)
+        this->timer->setInterval(this->IntervalTcpClient);
+
+    if(this->AutoSendTcpClient && !this->timer->isActive()){
+        timer->start();
+    }
+}
+
+void TcpClient::stopAutoSendTimer()
+{
+    if(this->timer->interval() != this->IntervalTcpClient)
+        this->timer->setInterval(this->IntervalTcpClient);
+
+    if(!this->AutoSendTcpClient && this->timer->isActive())
+        timer->stop();
+}
+
+void TcpClient::slot_timer()
+{
+    if(!this->isOk || this->autoSendString.isEmpty())
+        return;
+
+    this->sendData(this->autoSendString);
+
+    emit autoSendOk(this->autoSendString);
 }
 
 void TcpClient::initConfig()

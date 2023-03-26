@@ -32,7 +32,10 @@ public:
     quint16 remotePortInt();
 
 private:
+    bool isOk;
     QTcpSocket *socket;
+    QTimer *timer;
+    QString autoSendString;
 
     //TCP客户端配置参数
     bool HexSendTcpClient;       //16进制发送
@@ -47,6 +50,10 @@ private:
     int TcpServerPort;           //服务器端口
 
 public:
+    void setAutoSendString(QString &str);
+    void startAutoSendTimer();
+    void stopAutoSendTimer();
+
     void initConfig();
     void writeConfig();
     void readConfig();
@@ -75,12 +82,14 @@ public:
 
 
 signals:
+    void autoSendOk(QString &str);
     void connected();
     void disconnected();
     void readyRead();
     void errorOccurred(QString errorString);
 
 private slots:
+    void slot_timer();
     void slot_connected();
     void slot_disconnected();
     void slot_readyRead();

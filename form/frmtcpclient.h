@@ -31,7 +31,6 @@ private slots:
     void initForm();
     void initConfig();
     void saveConfig();
-    void initTimer();
     void append(int type, const QString &data, bool clear = false);
 
 private slots:
@@ -40,6 +39,7 @@ private slots:
     void error(QString errorString);
     void readData();
     void sendData(const QString &data);
+    void autoSend(QString &data);
 
 private slots:
     void on_btnConnect_clicked();

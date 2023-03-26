@@ -42,15 +42,12 @@ void frmTcpClient::initForm()
     connect(client, SIGNAL(disconnected()), this, SLOT(disconnected()));
     connect(client, SIGNAL(readyRead()), this, SLOT(readData()));
     connect(client, SIGNAL(errorOccurred(QString)), this, SLOT(error(QString)));
-
-    //定时器发送数据
-    timer = new QTimer(this);
-    connect(timer, SIGNAL(timeout()), this, SLOT(on_btnSend_clicked()));
+    connect(client, SIGNAL(autoSendOk(QString&)), this, SLOT(autoSend(QString&)));
 
     //填充数据到下拉框
     ui->cboxInterval->addItems(AppData::Intervals);
     ui->cboxData->addItems(AppData::Datas);
-    AppData::loadIP(ui->cboxBindIP);    
+    AppData::loadIP(ui->cboxBindIP);
 }
 
 void frmTcpClient::initConfig()
@@ -84,8 +81,6 @@ void frmTcpClient::initConfig()
 
     ui->txtServerPort->setText(QString::number(client->readConfigTcpServerPort()));
     connect(ui->txtServerPort, SIGNAL(textChanged(QString)), this, SLOT(saveConfig()));
-
-    this->initTimer();
 }
 
 void frmTcpClient::saveConfig()
@@ -94,33 +89,26 @@ void frmTcpClient::saveConfig()
     client->writeConfigHexReceiveTcpClient(ui->ckHexReceive->isChecked());
     client->writeConfigAsciiTcpClient(ui->ckAscii->isChecked());
     client->writeConfigDebugTcpClient(ui->ckDebug->isChecked());
-    client->writeConfigAutoSendTcpClient(ui->ckAutoSend->isChecked());
-    client->writeConfigIntervalTcpClient(ui->cboxInterval->currentText().toInt());
     client->writeConfigTcpBindIP(ui->cboxBindIP->currentText());
     client->writeConfigTcpBindPort(ui->txtBindPort->text().trimmed().toInt());
     client->writeConfigTcpServerIP(ui->txtServerIP->text().trimmed());
     client->writeConfigTcpServerPort(ui->txtServerPort->text().trimmed().toInt());
 
+    client->writeConfigAutoSendTcpClient(ui->ckAutoSend->isChecked());
+    client->writeConfigIntervalTcpClient(ui->cboxInterval->currentText().toInt());
+
+    if(ui->ckAutoSend->isChecked()){
+        QString data = ui->cboxData->currentText();
+        client->setAutoSendString(data);
+        client->startAutoSendTimer();
+    }else{
+        client->stopAutoSendTimer();
+    }
+
+    QString data = ui->cboxData->currentText();
+    client->setAutoSendString(data);
+
     client->writeConfig();
-
-    this->initTimer();
-}
-
-void frmTcpClient::initTimer()
-{
-    if (timer->interval() != client->readConfigIntervalTcpClient()) {
-        timer->setInterval(client->readConfigIntervalTcpClient());
-    }
-
-    if (client->readConfigAutoSendTcpClient()) {
-        if (!timer->isActive()) {
-            timer->start();
-        }
-    } else {
-        if (timer->isActive()) {
-            timer->stop();
-        }
-    }
 }
 
 void frmTcpClient::append(int type, const QString &data, bool clear)
@@ -248,4 +236,17 @@ void frmTcpClient::on_btnSend_clicked()
     }
 
     sendData(data);
+}
+
+void frmTcpClient::autoSend(QString &data)
+{
+    if (!isOk) {
+        return;
+    }
+
+    if (data.length() <= 0) {
+        return;
+    }
+
+    append(0, data);
 }
