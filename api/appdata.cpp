@@ -3,8 +3,13 @@
 
 QStringList AppData::Intervals = QStringList();
 QStringList AppData::Datas = QStringList();
-QStringList AppData::Keys = QStringList();
-QStringList AppData::Values = QStringList();
+
+// txt文档的数据格式
+// 左边是接收到的key，右边是发送的value
+// 第一行：16 FF 01 01 E0 E1;11 22 33 44 55 66
+// 第二行：16 FF 01 01 E0 E2;aa bb cc dd ee ff
+QStringList AppData::Keys = QStringList();      // 会和接收到的数据进行比对，如果相同，则会发送下面的值
+QStringList AppData::Values = QStringList();    // 如果key和接收到的数据相同，则会发送这个数据
 
 QString AppData::SendFileName = "send.txt";
 void AppData::readSendData()

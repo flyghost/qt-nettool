@@ -187,6 +187,7 @@ void frmTcpClient::readData()
         int count = AppData::Keys.count();
         for (int i = 0; i < count; i++) {
             if (AppData::Keys.at(i) == buffer) {
+                qDebug() << "recv key : " << AppData::Keys.at(i) << ", send value : " << AppData::Values.at(i);
                 sendData(AppData::Values.at(i));
                 break;
             }
