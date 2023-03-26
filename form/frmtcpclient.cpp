@@ -107,8 +107,6 @@ void frmTcpClient::saveConfig()
 
     QString data = ui->cboxData->currentText();
     client->setAutoSendString(data);
-
-    client->writeConfig();
 }
 
 void frmTcpClient::append(int type, const QString &data, bool clear)

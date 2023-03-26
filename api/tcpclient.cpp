@@ -4,14 +4,22 @@
 #include "quihelper.h"
 #include "quihelperdata.h"
 
+#define WRITE_KEY_VAL(pSet, key, val) \
+    do{                         \
+        pSet->beginGroup("TcpClientConfig");\
+        pSet->setValue(""#key"", val);\
+        pSet->endGroup();\
+    }while(0);
+
 TcpClient::TcpClient(QObject *parent) : QObject(parent)
 {
-    this->isOk = false;
     this->initConfig();
     this->readConfig();
 
     this->socket = new QTcpSocket(this);
     this->timer = new QTimer(this);
+    set = new QSettings(AppConfig::ConfigFile, QSettings::IniFormat);
+
     connect(timer, SIGNAL(timeout()), this, SLOT(slot_timer()));
     connect(socket, SIGNAL(connected()), this, SLOT(slot_connected()));
     connect(socket, SIGNAL(disconnected()), this, SLOT(slot_disconnected()));
@@ -150,13 +158,13 @@ quint16 TcpClient::remotePortInt()
 
 void TcpClient::slot_connected()
 {
-    this->isOk = true;
+    this->isConnected = true;
     emit connected();
 }
 
 void TcpClient::slot_disconnected()
 {
-    this->isOk = false;
+    this->isConnected = false;
     emit disconnected();
 }
 
@@ -172,7 +180,7 @@ void TcpClient::slot_errorOccurred()
 
 void TcpClient::setAutoSendString(QString &str)
 {
-    if (!isOk && str.length() <= 0) {
+    if (!isConnected && str.length() <= 0) {
         return;
     }
 
@@ -200,7 +208,7 @@ void TcpClient::stopAutoSendTimer()
 
 void TcpClient::slot_timer()
 {
-    if(!this->isOk || this->autoSendString.isEmpty())
+    if(!this->isConnected || this->autoSendString.isEmpty())
         return;
 
     this->sendData(this->autoSendString);
@@ -210,6 +218,8 @@ void TcpClient::slot_timer()
 
 void TcpClient::initConfig()
 {
+    isConnected = false;
+    autoSendString = "aa bb cc dd ee ff";
     HexSendTcpClient = false;
     HexReceiveTcpClient = false;
     AsciiTcpClient = false;
@@ -240,6 +250,10 @@ bool TcpClient::readConfigDebugTcpClient()
 }
 bool TcpClient::readConfigAutoSendTcpClient()
 {
+    if(AutoSendTcpClient)
+        startAutoSendTimer();
+    else
+        stopAutoSendTimer();
     return this->AutoSendTcpClient;
 }
 int TcpClient::readConfigIntervalTcpClient()
@@ -265,59 +279,52 @@ int TcpClient::readConfigTcpServerPort()
 void TcpClient::writeConfigHexSendTcpClient(bool HexSendTcpClient)
 {
     this->HexSendTcpClient = HexSendTcpClient;
+    WRITE_KEY_VAL(this->set, HexSendTcpClient, HexSendTcpClient);
 }
 void TcpClient::writeConfigHexReceiveTcpClient(bool HexReceiveTcpClient)
 {
     this->HexReceiveTcpClient = HexReceiveTcpClient;
+    WRITE_KEY_VAL(this->set, HexReceiveTcpClient, HexReceiveTcpClient);
 }
 void TcpClient::writeConfigAsciiTcpClient(bool AsciiTcpClient)
 {
     this->AsciiTcpClient = AsciiTcpClient;
+    WRITE_KEY_VAL(this->set, AsciiTcpClient, AsciiTcpClient);
 }
 void TcpClient::writeConfigDebugTcpClient(bool DebugTcpClient)
 {
     this->DebugTcpClient = DebugTcpClient;
+    WRITE_KEY_VAL(this->set, DebugTcpClient, DebugTcpClient);
 }
 void TcpClient::writeConfigAutoSendTcpClient(bool AutoSendTcpClient)
 {
     this->AutoSendTcpClient = AutoSendTcpClient;
+    WRITE_KEY_VAL(this->set, AutoSendTcpClient, AutoSendTcpClient);
 }
 void TcpClient::writeConfigIntervalTcpClient(int IntervalTcpClient)
 {
     this->IntervalTcpClient = IntervalTcpClient;
+    WRITE_KEY_VAL(this->set, IntervalTcpClient, IntervalTcpClient);
 }
 void TcpClient::writeConfigTcpBindIP(QString TcpBindIP)
 {
     this->TcpBindIP = TcpBindIP;
+    WRITE_KEY_VAL(this->set, TcpBindIP, TcpBindIP);
 }
 void TcpClient::writeConfigTcpBindPort(int TcpBindPort)
 {
     this->TcpBindPort = TcpBindPort;
+    WRITE_KEY_VAL(this->set, TcpBindPort, TcpBindPort);
 }
 void TcpClient::writeConfigTcpServerIP(QString TcpServerIP)
 {
     this->TcpServerIP = TcpServerIP;
+    WRITE_KEY_VAL(this->set, TcpServerIP, TcpServerIP);
 }
 void TcpClient::writeConfigTcpServerPort(int TcpServerPort)
 {
     this->TcpServerPort = TcpServerPort;
-}
-
-void TcpClient::writeConfig()
-{
-    QSettings set(AppConfig::ConfigFile, QSettings::IniFormat);
-
-    set.beginGroup("TcpClientConfig");
-    set.setValue("HexSendTcpClient", this->HexSendTcpClient);
-    set.setValue("HexReceiveTcpClient", this->HexReceiveTcpClient);
-    set.setValue("DebugTcpClient", this->DebugTcpClient);
-    set.setValue("AutoSendTcpClient", this->AutoSendTcpClient);
-    set.setValue("IntervalTcpClient", this->IntervalTcpClient);
-    set.setValue("TcpBindIP", this->TcpBindIP);
-    set.setValue("TcpBindPort", this->TcpBindPort);
-    set.setValue("TcpServerIP", this->TcpServerIP);
-    set.setValue("TcpServerPort", this->TcpServerPort);
-    set.endGroup();
+    WRITE_KEY_VAL(this->set, TcpServerPort, TcpServerPort);
 }
 
 void TcpClient::readConfig()

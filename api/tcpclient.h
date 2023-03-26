@@ -32,9 +32,10 @@ public:
     quint16 remotePortInt();
 
 private:
-    bool isOk;
+    bool isConnected;
     QTcpSocket *socket;
     QTimer *timer;
+    QSettings *set;
     QString autoSendString;
 
     //TCP客户端配置参数
@@ -55,7 +56,6 @@ public:
     void stopAutoSendTimer();
 
     void initConfig();
-    void writeConfig();
     void readConfig();
 
     bool readConfigHexSendTcpClient();
