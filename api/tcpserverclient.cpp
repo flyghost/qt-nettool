@@ -1,6 +1,6 @@
 #include "tcpserverclient.h"
 #include "quihelper.h"
-#include "quihelperdata.h"
+#include "datahelper.h"
 
 TcpServerClient::TcpServerClient(QTcpSocket *socket, QObject *parent) : QObject(parent)
 {
@@ -49,9 +49,9 @@ void TcpServerClient::slot_readData()
 
     QString buffer;
     if (AppConfig::HexReceiveTcpServer) {
-        buffer = QUIHelperData::byteArrayToHexStr(data);
+        buffer = DataHelper::byteArrayToHexStr(data);
     } else if (AppConfig::AsciiTcpServer) {
-        buffer = QUIHelperData::byteArrayToAsciiStr(data);
+        buffer = DataHelper::byteArrayToAsciiStr(data);
     } else {
         buffer = QString(data);
     }
@@ -74,9 +74,9 @@ void TcpServerClient::sendData(const QString &data)
 {
     QByteArray buffer;
     if (AppConfig::HexSendTcpServer) {
-        buffer = QUIHelperData::hexStrToByteArray(data);
+        buffer = DataHelper::hexStrToByteArray(data);
     } else if (AppConfig::AsciiTcpServer) {
-        buffer = QUIHelperData::asciiStrToByteArray(data);
+        buffer = DataHelper::asciiStrToByteArray(data);
     } else {
         buffer = data.toUtf8();
     }

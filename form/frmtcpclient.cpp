@@ -1,7 +1,7 @@
 ﻿#include "frmtcpclient.h"
 #include "ui_frmtcpclient.h"
 #include "quihelper.h"
-#include "quihelperdata.h"
+#include "datahelper.h"
 #include "iphelper.h"
 
 frmTcpClient::frmTcpClient(QWidget *parent) : QWidget(parent), ui(new Ui::frmTcpClient)

@@ -1,25 +1,25 @@
-﻿#include "quihelperdata.h"
+﻿#include "datahelper.h"
 #include "quihelper.h"
 
-int QUIHelperData::strHexToDecimal(const QString &strHex)
+int DataHelper::strHexToDecimal(const QString &strHex)
 {
     bool ok;
     return strHex.toInt(&ok, 16);
 }
 
-int QUIHelperData::strDecimalToDecimal(const QString &strDecimal)
+int DataHelper::strDecimalToDecimal(const QString &strDecimal)
 {
     bool ok;
     return strDecimal.toInt(&ok, 10);
 }
 
-int QUIHelperData::strBinToDecimal(const QString &strBin)
+int DataHelper::strBinToDecimal(const QString &strBin)
 {
     bool ok;
     return strBin.toInt(&ok, 2);
 }
 
-QString QUIHelperData::strHexToStrBin(const QString &strHex)
+QString DataHelper::strHexToStrBin(const QString &strHex)
 {
     uchar decimal = strHexToDecimal(strHex);
     QString bin = QString::number(decimal, 2);
@@ -34,7 +34,7 @@ QString QUIHelperData::strHexToStrBin(const QString &strHex)
     return bin;
 }
 
-QString QUIHelperData::decimalToStrBin1(int decimal)
+QString DataHelper::decimalToStrBin1(int decimal)
 {
     QString bin = QString::number(decimal, 2);
     uchar len = bin.length();
@@ -47,7 +47,7 @@ QString QUIHelperData::decimalToStrBin1(int decimal)
     return bin;
 }
 
-QString QUIHelperData::decimalToStrBin2(int decimal)
+QString DataHelper::decimalToStrBin2(int decimal)
 {
     QString bin = QString::number(decimal, 2);
     uchar len = bin.length();
@@ -60,7 +60,7 @@ QString QUIHelperData::decimalToStrBin2(int decimal)
     return bin;
 }
 
-QString QUIHelperData::decimalToStrHex(int decimal)
+QString DataHelper::decimalToStrHex(int decimal)
 {
     QString temp = QString::number(decimal, 16);
     if (temp.length() == 1) {
@@ -70,7 +70,7 @@ QString QUIHelperData::decimalToStrHex(int decimal)
     return temp;
 }
 
-QByteArray QUIHelperData::intToByte(int data)
+QByteArray DataHelper::intToByte(int data)
 {
     QByteArray result;
     result.resize(4);
@@ -81,7 +81,7 @@ QByteArray QUIHelperData::intToByte(int data)
     return result;
 }
 
-QByteArray QUIHelperData::intToByteRec(int data)
+QByteArray DataHelper::intToByteRec(int data)
 {
     QByteArray result;
     result.resize(4);
@@ -92,7 +92,7 @@ QByteArray QUIHelperData::intToByteRec(int data)
     return result;
 }
 
-int QUIHelperData::byteToInt(const QByteArray &data)
+int DataHelper::byteToInt(const QByteArray &data)
 {
     int i = data.at(3) & 0x000000ff;
     i |= ((data.at(2) << 8) & 0x0000ff00);
@@ -101,7 +101,7 @@ int QUIHelperData::byteToInt(const QByteArray &data)
     return i;
 }
 
-int QUIHelperData::byteToIntRec(const QByteArray &data)
+int DataHelper::byteToIntRec(const QByteArray &data)
 {
     int i = data.at(0) & 0x000000ff;
     i |= ((data.at(1) << 8) & 0x0000ff00);
@@ -110,7 +110,7 @@ int QUIHelperData::byteToIntRec(const QByteArray &data)
     return i;
 }
 
-quint32 QUIHelperData::byteToUInt(const QByteArray &data)
+quint32 DataHelper::byteToUInt(const QByteArray &data)
 {
     quint32 i = data.at(3) & 0x000000ff;
     i |= ((data.at(2) << 8) & 0x0000ff00);
@@ -119,7 +119,7 @@ quint32 QUIHelperData::byteToUInt(const QByteArray &data)
     return i;
 }
 
-quint32 QUIHelperData::byteToUIntRec(const QByteArray &data)
+quint32 DataHelper::byteToUIntRec(const QByteArray &data)
 {
     quint32 i = data.at(0) & 0x000000ff;
     i |= ((data.at(1) << 8) & 0x0000ff00);
@@ -128,7 +128,7 @@ quint32 QUIHelperData::byteToUIntRec(const QByteArray &data)
     return i;
 }
 
-QByteArray QUIHelperData::ushortToByte(ushort data)
+QByteArray DataHelper::ushortToByte(ushort data)
 {
     QByteArray result;
     result.resize(2);
@@ -137,7 +137,7 @@ QByteArray QUIHelperData::ushortToByte(ushort data)
     return result;
 }
 
-QByteArray QUIHelperData::ushortToByteRec(ushort data)
+QByteArray DataHelper::ushortToByteRec(ushort data)
 {
     QByteArray result;
     result.resize(2);
@@ -146,7 +146,7 @@ QByteArray QUIHelperData::ushortToByteRec(ushort data)
     return result;
 }
 
-int QUIHelperData::byteToUShort(const QByteArray &data)
+int DataHelper::byteToUShort(const QByteArray &data)
 {
     int i = data.at(1) & 0x000000FF;
     i |= ((data.at(0) << 8) & 0x0000FF00);
@@ -157,7 +157,7 @@ int QUIHelperData::byteToUShort(const QByteArray &data)
     return i;
 }
 
-int QUIHelperData::byteToUShortRec(const QByteArray &data)
+int DataHelper::byteToUShortRec(const QByteArray &data)
 {
     int i = data.at(0) & 0x000000FF;
     i |= ((data.at(1) << 8) & 0x0000FF00);
@@ -168,7 +168,7 @@ int QUIHelperData::byteToUShortRec(const QByteArray &data)
     return i;
 }
 
-QString QUIHelperData::getValue(quint8 value)
+QString DataHelper::getValue(quint8 value)
 {
     QString result = QString::number(value);
     if (result.length() <= 1) {
@@ -177,7 +177,7 @@ QString QUIHelperData::getValue(quint8 value)
     return result;
 }
 
-QString QUIHelperData::getXorEncryptDecrypt(const QString &value, char key)
+QString DataHelper::getXorEncryptDecrypt(const QString &value, char key)
 {
     //矫正范围外的数据
     if (key < 0 || key >= 127) {
@@ -197,7 +197,7 @@ QString QUIHelperData::getXorEncryptDecrypt(const QString &value, char key)
     return result;
 }
 
-uchar QUIHelperData::getOrCode(const QByteArray &data)
+uchar DataHelper::getOrCode(const QByteArray &data)
 {
     int len = data.length();
     uchar result = 0;
@@ -208,7 +208,7 @@ uchar QUIHelperData::getOrCode(const QByteArray &data)
     return result;
 }
 
-uchar QUIHelperData::getCheckCode(const QByteArray &data)
+uchar DataHelper::getCheckCode(const QByteArray &data)
 {
     int len = data.length();
     uchar temp = 0;
@@ -226,7 +226,7 @@ uchar QUIHelperData::getCheckCode(const QByteArray &data)
 //参数4：table 16位CRC查找表
 
 //正序CRC计算
-quint16 QUIHelperData::getCrc16(quint8 *data, int len, quint16 init, const quint16 *table)
+quint16 DataHelper::getCrc16(quint8 *data, int len, quint16 init, const quint16 *table)
 {
     quint16 crc_16 = init;
     quint8 temp;
@@ -239,7 +239,7 @@ quint16 QUIHelperData::getCrc16(quint8 *data, int len, quint16 init, const quint
 }
 
 //逆序CRC计算
-quint16 QUIHelperData::getCrc16Rec(quint8 *data, int len, quint16 init, const quint16 *table)
+quint16 DataHelper::getCrc16Rec(quint8 *data, int len, quint16 init, const quint16 *table)
 {
     quint16 crc_16 = init;
     quint8 temp;
@@ -252,7 +252,7 @@ quint16 QUIHelperData::getCrc16Rec(quint8 *data, int len, quint16 init, const qu
 }
 
 //Modbus CRC16校验
-quint16 QUIHelperData::getModbus16(quint8 *data, int len)
+quint16 DataHelper::getModbus16(quint8 *data, int len)
 {
     //MODBUS CRC-16表 8005 逆序
     const quint16 table_16[256] = {
@@ -294,14 +294,14 @@ quint16 QUIHelperData::getModbus16(quint8 *data, int len)
 }
 
 //CRC16校验
-QByteArray QUIHelperData::getCrcCode(const QByteArray &data)
+QByteArray DataHelper::getCrcCode(const QByteArray &data)
 {
     quint16 result = getModbus16((quint8 *)data.data(), data.length());
-    return QUIHelperData::ushortToByteRec(result);
+    return DataHelper::ushortToByteRec(result);
 }
 
 static QMap<char, QString> listChar;
-void QUIHelperData::initAscii()
+void DataHelper::initAscii()
 {
     //0x20为空格,空格以下都是不可见字符
     if (listChar.count() == 0) {
@@ -342,7 +342,7 @@ void QUIHelperData::initAscii()
     }
 }
 
-QString QUIHelperData::byteArrayToAsciiStr(const QByteArray &data)
+QString DataHelper::byteArrayToAsciiStr(const QByteArray &data)
 {
     //先初始化字符表
     initAscii();
@@ -366,7 +366,7 @@ QString QUIHelperData::byteArrayToAsciiStr(const QByteArray &data)
     return temp.trimmed();
 }
 
-QByteArray QUIHelperData::asciiStrToByteArray(const QString &data)
+QByteArray DataHelper::asciiStrToByteArray(const QString &data)
 {
     //先初始化字符表
     initAscii();
@@ -395,7 +395,7 @@ QByteArray QUIHelperData::asciiStrToByteArray(const QString &data)
     return buffer;
 }
 
-char QUIHelperData::hexStrToChar(char data)
+char DataHelper::hexStrToChar(char data)
 {
     if ((data >= '0') && (data <= '9')) {
         return data - 0x30;
@@ -408,7 +408,7 @@ char QUIHelperData::hexStrToChar(char data)
     }
 }
 
-QByteArray QUIHelperData::hexStrToByteArray(const QString &data)
+QByteArray DataHelper::hexStrToByteArray(const QString &data)
 {
     QByteArray senddata;
     int hexdata, lowhexdata;
@@ -448,7 +448,7 @@ QByteArray QUIHelperData::hexStrToByteArray(const QString &data)
     return senddata;
 }
 
-QString QUIHelperData::byteArrayToHexStr(const QByteArray &data)
+QString DataHelper::byteArrayToHexStr(const QByteArray &data)
 {
     QString temp = "";
     QString hex = data.toHex();

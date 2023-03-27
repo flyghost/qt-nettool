@@ -2,7 +2,7 @@
 
 #include "tcpclient.h"
 #include "quihelper.h"
-#include "quihelperdata.h"
+#include "datahelper.h"
 
 #define WRITE_KEY_VAL(pSet, key, val) \
     do{                         \
@@ -59,13 +59,13 @@ QString TcpClient::errorString() const
 
 qint64 TcpClient::writeHexString(const QString &data)
 {
-    QByteArray buffer = QUIHelperData::hexStrToByteArray(data);
+    QByteArray buffer = DataHelper::hexStrToByteArray(data);
     return this->socket->write(buffer);
 }
 
 qint64 TcpClient::writeAsciiString(const QString &data)
 {
-    QByteArray buffer = QUIHelperData::asciiStrToByteArray(data);
+    QByteArray buffer = DataHelper::asciiStrToByteArray(data);
     return this->socket->write(buffer);
 }
 
@@ -94,7 +94,7 @@ qsizetype TcpClient::readHexString(QString *string)
         return size;
     }
 
-    *string = QUIHelperData::byteArrayToHexStr(data);
+    *string = DataHelper::byteArrayToHexStr(data);
     return size;
 }
 
@@ -106,7 +106,7 @@ qsizetype TcpClient::readAsciiString(QString *string)
         return size;
     }
 
-    *string = QUIHelperData::byteArrayToAsciiStr(data);
+    *string = DataHelper::byteArrayToAsciiStr(data);
     return size;
 }
 

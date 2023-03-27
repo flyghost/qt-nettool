@@ -1,7 +1,7 @@
 ﻿#include "frmudpserver.h"
 #include "ui_frmudpserver.h"
 #include "quihelper.h"
-#include "quihelperdata.h"
+#include "datahelper.h"
 #include "iphelper.h"
 
 frmUdpServer::frmUdpServer(QWidget *parent) : QWidget(parent), ui(new Ui::frmUdpServer)
@@ -180,9 +180,9 @@ void frmUdpServer::readData()
         socket->readDatagram(data.data(), data.size(), &host, &port);
 
         if (AppConfig::HexReceiveUdpServer) {
-            buffer = QUIHelperData::byteArrayToHexStr(data);
+            buffer = DataHelper::byteArrayToHexStr(data);
         } else if (AppConfig::AsciiUdpServer) {
-            buffer = QUIHelperData::byteArrayToAsciiStr(data);
+            buffer = DataHelper::byteArrayToAsciiStr(data);
         } else {
             buffer = QString(data);
         }
@@ -225,9 +225,9 @@ void frmUdpServer::sendData(const QString &ip, int port, const QString &data)
 {
     QByteArray buffer;
     if (AppConfig::HexSendUdpServer) {
-        buffer = QUIHelperData::hexStrToByteArray(data);
+        buffer = DataHelper::hexStrToByteArray(data);
     } else if (AppConfig::AsciiUdpServer) {
-        buffer = QUIHelperData::asciiStrToByteArray(data);
+        buffer = DataHelper::asciiStrToByteArray(data);
     } else {
         buffer = data.toUtf8();
     }

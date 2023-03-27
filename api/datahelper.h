@@ -3,7 +3,7 @@
 
 #include <QObject>
 
-class QUIHelperData
+class DataHelper
 {
 public:
     //16进制字符串转10进制
