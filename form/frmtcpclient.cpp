@@ -49,9 +49,7 @@ void frmTcpClient::initForm()
     ui->cboxInterval->addItems(AppData::Intervals);
     ui->cboxData->addItems(AppData::Datas);
 
-    QStringList ips = IpHelper::loadIP();
-    ui->cboxBindIP->clear();
-    ui->cboxBindIP->addItems(ips);
+    IpHelper::comboboxAddIP(ui->cboxBindIP);
 }
 
 void frmTcpClient::initConfig()

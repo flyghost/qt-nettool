@@ -2,6 +2,7 @@
 #include "ui_frmudpclient.h"
 #include "quihelper.h"
 #include "quihelperdata.h"
+#include "iphelper.h"
 
 frmUdpClient::frmUdpClient(QWidget *parent) : QWidget(parent), ui(new Ui::frmUdpClient)
 {
@@ -50,7 +51,7 @@ void frmUdpClient::initForm()
     //填充数据到下拉框
     ui->cboxInterval->addItems(AppData::Intervals);
     ui->cboxData->addItems(AppData::Datas);
-    AppData::loadIP(ui->cboxBindIP);
+    IpHelper::comboboxAddIP(ui->cboxBindIP);
 }
 
 void frmUdpClient::initConfig()

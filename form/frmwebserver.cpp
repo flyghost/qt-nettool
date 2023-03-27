@@ -1,6 +1,7 @@
 ﻿#include "frmwebserver.h"
 #include "ui_frmwebserver.h"
 #include "quihelper.h"
+#include "iphelper.h"
 
 frmWebServer::frmWebServer(QWidget *parent) : QWidget(parent), ui(new Ui::frmWebServer)
 {
@@ -51,7 +52,7 @@ void frmWebServer::initForm()
     //填充数据到下拉框
     ui->cboxInterval->addItems(AppData::Intervals);
     ui->cboxData->addItems(AppData::Datas);
-    AppData::loadIP(ui->cboxListenIP);
+    IpHelper::comboboxAddIP(ui->cboxListenIP);
 }
 
 void frmWebServer::initConfig()

@@ -1,6 +1,7 @@
 ﻿#include "frmtcpserver.h"
 #include "ui_frmtcpserver.h"
 #include "quihelper.h"
+#include "iphelper.h"
 
 frmTcpServer::frmTcpServer(QWidget *parent) : QWidget(parent), ui(new Ui::frmTcpServer)
 {
@@ -53,7 +54,7 @@ void frmTcpServer::initForm()
     //填充数据到下拉框
     ui->cboxInterval->addItems(AppData::Intervals);
     ui->cboxData->addItems(AppData::Datas);
-    AppData::loadIP(ui->cboxListenIP);
+    IpHelper::comboboxAddIP(ui->cboxListenIP);
 }
 
 void frmTcpServer::initConfig()

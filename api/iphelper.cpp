@@ -45,3 +45,15 @@ QStringList IpHelper::loadIP()
 
     return ips;
 }
+
+void IpHelper::comboboxAddIP(QComboBox *cbox)
+{
+    QStringList ips = loadIP();
+
+    if (!ips.contains("127.0.0.1")) {
+        ips << "127.0.0.1";
+    }
+
+    cbox->clear();
+    cbox->addItems(ips);
+}
