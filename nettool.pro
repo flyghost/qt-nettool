@@ -29,3 +29,4 @@ INCLUDEPATH += $$PWD/form
 
 include ($$PWD/api/api.pri)
 include ($$PWD/form/form.pri)
+include ($$PWD/components/components.pri)
