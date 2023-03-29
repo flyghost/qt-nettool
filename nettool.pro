@@ -1,3 +1,8 @@
+TARGET      = nettool
+TEMPLATE    = app
+DESTDIR     = $$PWD/build/bin
+
+
 QT += core gui network
 greaterThan(QT_MAJOR_VERSION, 4) {
 QT += widgets
@@ -9,23 +14,15 @@ DEFINES += websocket
 
 greaterThan(QT_MAJOR_VERSION, 5): QT += core5compat
 
-TARGET      = nettool
-TEMPLATE    = app
-RC_FILE     = qrc/main.rc
-wasm {
-RESOURCES   += qrc/font.qrc
-} else {
-DESTDIR     = $$PWD/build/bin
-}
 
-HEADERS     += head.h
-SOURCES     += main.cpp
-RESOURCES   += qrc/main.qrc
+
+
 CONFIG      += warn_off
 
 INCLUDEPATH += $$PWD
-INCLUDEPATH += $$PWD/api
 
+include ($$PWD/applications/nettool/pure.pri)
+include ($$PWD/qrc/qrc.pri)
 include ($$PWD/api/api.pri)
 include ($$PWD/examples/examples.pri)
 include ($$PWD/components/components.pri)
