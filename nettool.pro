@@ -21,7 +21,7 @@ CONFIG      += warn_off
 
 INCLUDEPATH += $$PWD
 
-include ($$PWD/applications/nettool/pure.pri)
+include ($$PWD/applications/nettool/nettool.pri)
 include ($$PWD/qrc/qrc.pri)
 include ($$PWD/api/api.pri)
 include ($$PWD/examples/examples.pri)
